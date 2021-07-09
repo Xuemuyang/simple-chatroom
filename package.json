@@ -1,7 +1,13 @@
 {
-  "name": "root",
+  "name": "chatroom",
   "private": true,
   "devDependencies": {
     "lerna": "^4.0.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "app": "cd packages/app && yarn start"
   }
 }
