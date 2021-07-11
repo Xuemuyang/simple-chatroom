@@ -23,9 +23,9 @@ export interface UserMessage {
   userId: string
 }
 
-export type Message = BaseMessage & UserMessage
+export type WSMessage = BaseMessage & UserMessage
   
 export interface NewMessage extends BaseUser {
   id: string;
-  message: Message;
+  message: WSMessage;
 }

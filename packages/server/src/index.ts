@@ -2,7 +2,7 @@ import Koa from 'koa';
 import { Server } from 'socket.io';
 import { port } from './config';
 import { v4 as uuid } from 'uuid';
-import { SOCKET_EVENT_TYPE, BaseMessage, Message, UserMessage } from '@chatroom/helper';
+import { SOCKET_EVENT_TYPE, BaseMessage, WSMessage, UserMessage } from '@chatroom/helper';
 
 const app = new Koa();
 const server = require('http').createServer(app);
@@ -17,7 +17,7 @@ io.on('connection', (socket) => {
   };
 
   // 监听当前用户加入
-  socket.on(SOCKET_EVENT_TYPE['ADD_USER'], (username: string) => {
+  socket.on(SOCKET_EVENT_TYPE.LOGIN_CLIENT, (username: string) => {
     if (currentUserAdded) return;
 
     currentUserInfo.username = username;
@@ -25,27 +25,32 @@ io.on('connection', (socket) => {
 
     currentUserAdded = true;
 
+    socket.emit(SOCKET_EVENT_TYPE.LOGIN_SERVER, {
+      id: uuid(),
+      ...currentUserInfo,
+    } as UserMessage);
+
     // 派发用户加入
-    socket.broadcast.emit(SOCKET_EVENT_TYPE['USER_JOIN'], {
+    socket.broadcast.emit(SOCKET_EVENT_TYPE.USER_JOIN, {
       id: uuid(),
       ...currentUserInfo,
     } as UserMessage);
   });
 
   // 处理新消息
-  socket.on(SOCKET_EVENT_TYPE['NEW_MESSAGE'], (data: BaseMessage) => {
+  socket.on(SOCKET_EVENT_TYPE.NEW_MESSAGE, (data: BaseMessage) => {
     // 广播发送新消息
-    socket.broadcast.emit(SOCKET_EVENT_TYPE['NEW_MESSAGE'], {
+    socket.broadcast.emit(SOCKET_EVENT_TYPE.NEW_MESSAGE, {
       id: uuid(),
       content: data.content,
       type: data.type,
       ...currentUserInfo,
-    } as Message);
+    } as WSMessage);
   });
 
-  socket.on(SOCKET_EVENT_TYPE['DISCONNECT'], () => {
+  socket.on(SOCKET_EVENT_TYPE.DISCONNECT, () => {
     if (currentUserAdded) {
-      socket.broadcast.emit(SOCKET_EVENT_TYPE['USER_LEFT'], {
+      socket.broadcast.emit(SOCKET_EVENT_TYPE.USER_LEFT, {
         id: uuid(),
         ...currentUserInfo,
       } as UserMessage);
@@ -54,5 +59,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(port, () => {
-  console.log(`server 启动在 http://localhost:${port}/`);
+  console.log(`@chatroom/server 启动在 http://localhost:${port}/`);
 });

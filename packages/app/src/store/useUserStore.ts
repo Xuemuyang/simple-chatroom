@@ -1,7 +1,8 @@
 import { useReducer } from 'react'
 
 const initUserState = {
-  userId: ''
+  userId: '',
+  userName: ''
 }
 
 const reducer = () => {
@@ -9,7 +10,7 @@ const reducer = () => {
 }
 
 const useUserStore = () => {
-
+  
 }
 
 export default useUserStore
