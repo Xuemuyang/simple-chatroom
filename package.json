@@ -20,7 +20,8 @@
     "packages/*"
   ],
   "scripts": {
-    "app": "cd packages/app && yarn start"
+    "app": "cd packages/app && yarn start",
+    "server": "cd packages/server && yarn start"
   },
   "config": {
     "commitizen": {

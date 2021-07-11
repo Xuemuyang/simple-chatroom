@@ -1,5 +1,5 @@
 // 这个组件内部使用 Hook 实现一个 TODO List
-import { useState, useReducer } from 'react';
+import { useState, useReducer, FC } from 'react';
 import './index.scss';
 
 interface todoItem {
@@ -64,7 +64,7 @@ const todoReducer = (state: todoItem[], action: todoAction): todoItem[] => {
   }
 };
 
-const Todo: React.FC = () => {
+const Todo: FC = () => {
   const [todoList, dispatch] = useReducer(todoReducer, initTodoState);
   const [inputValue, setInputValue] = useState('');
 
