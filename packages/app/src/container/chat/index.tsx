@@ -1,4 +1,7 @@
 import { FC, useCallback, useEffect, useReducer } from 'react';
+import io, { Socket } from 'socket.io-client';
+import { WSMessage, SOCKET_EVENT_TYPE, MESSAGE_TYPE } from '@chatroom/helper';
+
 import {
   ChatContext,
   useChatStore,
@@ -7,16 +10,10 @@ import {
   initChatState,
   Member,
 } from './store';
-import io, { Socket } from 'socket.io-client';
-import {
-  SERVER_URL,
-  WSMessage,
-  SOCKET_EVENT_TYPE,
-  MESSAGE_TYPE,
-} from '@chatroom/helper';
 import Header from './Header';
 import MessageList from './MessageList';
 import Operation from './Operation';
+import { SERVER_URL } from '../../assets/config';
 
 // 首先是登录的逻辑
 const ChatContainer: FC = () => {
