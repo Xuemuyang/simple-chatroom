@@ -1,15 +1,25 @@
 import Koa from 'koa';
 import { Server } from 'socket.io';
-import { port } from './config';
+import { port, clientOrigin } from './config';
 import { v4 as uuid } from 'uuid';
-import { SOCKET_EVENT_TYPE, BaseMessage, WSMessage, UserMessage } from '@chatroom/helper';
+import {
+  SOCKET_EVENT_TYPE,
+  BaseMessage,
+  WSMessage,
+  UserMessage,
+} from '@chatroom/helper';
 
 const app = new Koa();
 const server = require('http').createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: clientOrigin,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
 
 io.on('connection', (socket) => {
-  console.log('connection');
   let currentUserAdded = false;
   const currentUserInfo = {
     username: '',
