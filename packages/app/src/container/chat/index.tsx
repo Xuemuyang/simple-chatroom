@@ -136,6 +136,8 @@ const ChatContainer: FC = () => {
     if (!socket) {
       return;
     }
+    // 这里防止事件重复注册
+    socket.offAny()
 
     socket.on(SOCKET_EVENT_TYPE.LOGIN_SERVER, handleLoginServer);
     socket.on(SOCKET_EVENT_TYPE.NEW_MESSAGE, handleNewMessage);
