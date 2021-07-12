@@ -98,11 +98,11 @@ export const chatReducer = (
       return { ...state, socket: payload };
     }
     case ActionType.INSERT_MEMBER: {
-      return { ...state, members: { ...state.members, [payload.id]: payload } };
+      return { ...state, members: { ...state.members, [payload.userId]: payload } };
     }
     case ActionType.REMOVE_MEMBER: {
       const finalMembers = { ...state.members };
-      delete finalMembers[payload.id];
+      delete finalMembers[payload.userId];
       return { ...state, members: finalMembers };
     }
     case ActionType.UPDATE_USER: {

@@ -6,6 +6,7 @@ import {
   chatReducer,
   initChatState,
   Member,
+  ClientMessage,
 } from './store';
 import io, { Socket } from 'socket.io-client';
 import {
@@ -13,7 +14,9 @@ import {
   WSMessage,
   SOCKET_EVENT_TYPE,
   MESSAGE_TYPE,
+  BaseMessage,
 } from '@chatroom/helper';
+import { useInputValue } from '@chatroom/hooks';
 
 // 首先是登录的逻辑
 const ChatContainer: FC = () => {
@@ -40,7 +43,7 @@ const ChatContainer: FC = () => {
     (data: WSMessage) => {
       const user: Member = {
         username: data.username,
-        userId: data.id,
+        userId: data.userId,
       };
 
       // 本地更新 User 数据
@@ -137,7 +140,7 @@ const ChatContainer: FC = () => {
       return;
     }
     // 这里防止事件重复注册
-    socket.offAny()
+    socket.offAny();
 
     socket.on(SOCKET_EVENT_TYPE.LOGIN_SERVER, handleLoginServer);
     socket.on(SOCKET_EVENT_TYPE.NEW_MESSAGE, handleNewMessage);
@@ -151,7 +154,73 @@ const ChatContainer: FC = () => {
     handleUserLeft,
   ]);
 
-  return <div>123</div>;
+  const [username, setUsername, onUsernameChange] = useInputValue('');
+  const [content, setContent, onContentChange] = useInputValue('');
+  const handleSubmitUsername = () => {
+    // 拿到输入的值
+    state.socket?.emit(SOCKET_EVENT_TYPE.LOGIN_CLIENT, username);
+  };
+
+  const handleSendMessage = () => {
+    state.socket?.emit(SOCKET_EVENT_TYPE.NEW_MESSAGE, {
+      type: MESSAGE_TYPE.TEXT,
+      content: {
+        text: content,
+      },
+    } as BaseMessage);
+
+    // 本地将消息插入
+    dispatch({
+      type: ActionType.INSERT_MESSAGE,
+      payload: {
+        isOwner: true,
+        userId: state.userId,
+        username: state.username,
+        type: MESSAGE_TYPE.TEXT,
+        id: Date.now() + '',
+        content: {
+          text: content,
+        },
+      },
+    });
+
+    setContent('');
+  };
+
+  // 首先一个输入框，输入昵称，当昵称输入完成进入房间
+  return (
+    <div>
+      {/* 输入昵称 */}
+      {!state.userId ? (
+        <div>
+          <div>欢迎加入聊天室，输入昵称</div>
+          <input type="text" value={username} onChange={onUsernameChange} />
+          <button onClick={handleSubmitUsername}>提交</button>
+        </div>
+      ) : (
+        <div>
+          <div>聊天界面</div>
+          <input type="text" value={content} onChange={onContentChange} />
+          <button onClick={handleSendMessage}>发送</button>
+          {state.messages.map((message: ClientMessage) => {
+            if (message.type === MESSAGE_TYPE.TEXT) {
+              return (
+                <div key={message.id}>
+                  <div>
+                    {message.username}: {message.content?.text}
+                  </div>
+                </div>
+              );
+            } else if (message.type === MESSAGE_TYPE.SYSTEM_NOTICE) {
+              return (
+                <div key={message.id}>系统消息: {message.content?.text}</div>
+              );
+            }
+          })}
+        </div>
+      )}
+    </div>
+  );
 };
 
 const Chat: FC = () => {

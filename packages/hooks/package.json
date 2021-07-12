@@ -1,0 +1,9 @@
+{
+  "name": "@chatroom/hooks",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "dependencies": {
+    "react": "^17.0.2"
+  }
+}
