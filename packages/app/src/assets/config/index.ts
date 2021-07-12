@@ -1,0 +1,1 @@
+export const CHATROOM_NAME = 'React 聊天室'

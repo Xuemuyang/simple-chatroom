@@ -6,7 +6,6 @@ import {
   chatReducer,
   initChatState,
   Member,
-  ClientMessage,
 } from './store';
 import io, { Socket } from 'socket.io-client';
 import {
@@ -14,9 +13,10 @@ import {
   WSMessage,
   SOCKET_EVENT_TYPE,
   MESSAGE_TYPE,
-  BaseMessage,
 } from '@chatroom/helper';
-import { useInputValue } from '@chatroom/hooks';
+import Header from './Header';
+import MessageList from './MessageList';
+import Operation from './Operation';
 
 // 首先是登录的逻辑
 const ChatContainer: FC = () => {
@@ -154,71 +154,29 @@ const ChatContainer: FC = () => {
     handleUserLeft,
   ]);
 
-  const [username, setUsername, onUsernameChange] = useInputValue('');
-  const [content, setContent, onContentChange] = useInputValue('');
-  const handleSubmitUsername = () => {
-    // 拿到输入的值
-    state.socket?.emit(SOCKET_EVENT_TYPE.LOGIN_CLIENT, username);
-  };
-
-  const handleSendMessage = () => {
-    state.socket?.emit(SOCKET_EVENT_TYPE.NEW_MESSAGE, {
-      type: MESSAGE_TYPE.TEXT,
-      content: {
-        text: content,
-      },
-    } as BaseMessage);
-
-    // 本地将消息插入
-    dispatch({
-      type: ActionType.INSERT_MESSAGE,
-      payload: {
-        isOwner: true,
-        userId: state.userId,
-        username: state.username,
-        type: MESSAGE_TYPE.TEXT,
-        id: Date.now() + '',
-        content: {
-          text: content,
-        },
-      },
-    });
-
-    setContent('');
-  };
-
   // 首先一个输入框，输入昵称，当昵称输入完成进入房间
   return (
     <div>
-      {/* 输入昵称 */}
-      {!state.userId ? (
-        <div>
-          <div>欢迎加入聊天室，输入昵称</div>
-          <input type="text" value={username} onChange={onUsernameChange} />
-          <button onClick={handleSubmitUsername}>提交</button>
-        </div>
-      ) : (
-        <div>
-          <div>聊天界面</div>
-          <input type="text" value={content} onChange={onContentChange} />
-          <button onClick={handleSendMessage}>发送</button>
-          {state.messages.map((message: ClientMessage) => {
-            if (message.type === MESSAGE_TYPE.TEXT) {
-              return (
-                <div key={message.id}>
-                  <div>
-                    {message.username}: {message.content?.text}
-                  </div>
+      <Header></Header>
+      {/* <MessageList messages={state.messages}></MessageList> */}
+      {/* <div>
+        {state.messages.map((message: ClientMessage) => {
+          if (message.type === MESSAGE_TYPE.TEXT) {
+            return (
+              <div key={message.id}>
+                <div>
+                  {message.username}: {message.content?.text}
                 </div>
-              );
-            } else if (message.type === MESSAGE_TYPE.SYSTEM_NOTICE) {
-              return (
-                <div key={message.id}>系统消息: {message.content?.text}</div>
-              );
-            }
-          })}
-        </div>
-      )}
+              </div>
+            );
+          } else if (message.type === MESSAGE_TYPE.SYSTEM_NOTICE) {
+            return (
+              <div key={message.id}>系统消息: {message.content?.text}</div>
+            );
+          }
+        })}
+      </div> */}
+      <Operation></Operation>
     </div>
   );
 };

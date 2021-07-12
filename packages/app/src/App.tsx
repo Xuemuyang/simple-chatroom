@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import './assets/styles/index.scss';
 import { Route } from 'react-router-dom';
-import Todo from './container/todo';
 import Chat from './container/chat';
+import Todo from './container/todo';
 
 const App: FC = () => {
   return (
@@ -14,4 +14,3 @@ const App: FC = () => {
 };
 
 export default App;
- 

@@ -1,7 +1,6 @@
 // 这个组件内部使用 Hook 实现一个 TODO List
 import { useState, useReducer, FC } from 'react';
 import './index.scss';
-
 interface todoItem {
   status: boolean;
   content: string;
