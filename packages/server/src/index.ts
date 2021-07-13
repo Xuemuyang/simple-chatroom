@@ -22,7 +22,7 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
   let currentUserAdded = false;
-  const currentUserInfo = {
+  let currentUserInfo = {
     username: '',
     userId: '',
     avatar: '',
@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
     currentUserInfo.userId = uuid();
     currentUserInfo.avatar = generateRandomAvatar();
 
-    currentUserAdded = true
+    currentUserAdded = true;
 
     socket.emit(SOCKET_EVENT_TYPE.LOGIN_SERVER, {
       id: uuid(),
@@ -48,6 +48,21 @@ io.on('connection', (socket) => {
       id: uuid(),
       ...currentUserInfo,
     } as UserMessage);
+  });
+
+  // 监听当前用户加入
+  socket.on(SOCKET_EVENT_TYPE.LOGOUT, () => {
+    socket.broadcast.emit(SOCKET_EVENT_TYPE.USER_LEFT, {
+      id: uuid(),
+      ...currentUserInfo,
+    } as UserMessage);
+
+    currentUserAdded = false;
+    currentUserInfo = {
+      username: '',
+      userId: '',
+      avatar: '',
+    };
   });
 
   // 处理新消息

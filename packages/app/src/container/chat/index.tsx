@@ -31,7 +31,6 @@ const ChatContainer: FC = () => {
     });
 
     return () => {
-      socketInstance.close();
       dispatch({ type: ActionType.RESET });
     };
   }, [dispatch]);

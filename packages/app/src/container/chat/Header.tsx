@@ -40,6 +40,8 @@ const Header: FC = () => {
   const handleLog = () => {
     // 判断是否登录
     if (hasLogin) {
+      state.socket?.emit(SOCKET_EVENT_TYPE.LOGOUT);
+
       // 登录就登出
       dispatch({
         type: ActionType.RESET,
@@ -72,9 +74,7 @@ const Header: FC = () => {
       <Dialog open={isDialogOpen} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">{CHATROOM_NAME}</DialogTitle>
         <DialogContent>
-          <DialogContent>
-            欢迎，这里只聊 React
-          </DialogContent>
+          <DialogContent>欢迎，这里只聊 React</DialogContent>
           <TextField
             value={username}
             onChange={onUsernameChange}

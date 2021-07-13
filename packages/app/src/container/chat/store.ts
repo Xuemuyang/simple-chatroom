@@ -98,7 +98,10 @@ export const chatReducer = (
       return { ...state, socket: payload };
     }
     case ActionType.INSERT_MEMBER: {
-      return { ...state, members: { ...state.members, [payload.userId]: payload } };
+      return {
+        ...state,
+        members: { ...state.members, [payload.userId]: payload },
+      };
     }
     case ActionType.REMOVE_MEMBER: {
       const finalMembers = { ...state.members };
@@ -109,7 +112,7 @@ export const chatReducer = (
       return { ...state, ...payload };
     }
     case ActionType.RESET: {
-      return { ...initChatState };
+      return { ...initChatState, socket: state.socket };
     }
     default:
       throw new Error();
