@@ -20,7 +20,8 @@ export interface BaseMessage {
 export interface UserMessage {
   id: string;
   username: string,
-  userId: string
+  userId: string,
+  avatar?: string
 }
 
 export type WSMessage = BaseMessage & UserMessage

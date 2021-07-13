@@ -8,6 +8,7 @@ import {
   WSMessage,
   UserMessage,
 } from '@chatroom/helper';
+import { generateRandomAvatar } from '../src/helper';
 
 const app = new Koa();
 const server = require('http').createServer(app);
@@ -24,6 +25,7 @@ io.on('connection', (socket) => {
   const currentUserInfo = {
     username: '',
     userId: '',
+    avatar: '',
   };
 
   // 监听当前用户加入
@@ -32,8 +34,9 @@ io.on('connection', (socket) => {
 
     currentUserInfo.username = username;
     currentUserInfo.userId = uuid();
+    currentUserInfo.avatar = generateRandomAvatar();
 
-    currentUserAdded = true;
+    currentUserAdded = true
 
     socket.emit(SOCKET_EVENT_TYPE.LOGIN_SERVER, {
       id: uuid(),

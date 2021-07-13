@@ -1,6 +1,7 @@
 import { FC, useCallback, useEffect, useReducer } from 'react';
 import io, { Socket } from 'socket.io-client';
 import { WSMessage, SOCKET_EVENT_TYPE, MESSAGE_TYPE } from '@chatroom/helper';
+import { Box } from '@chatroom/component';
 
 import {
   ChatContext,
@@ -41,6 +42,7 @@ const ChatContainer: FC = () => {
       const user: Member = {
         username: data.username,
         userId: data.userId,
+        avatar: data.avatar,
       };
 
       // 本地更新 User 数据
@@ -79,6 +81,7 @@ const ChatContainer: FC = () => {
         payload: {
           userId: data.userId,
           username: data.username,
+          avatar: data.avatar,
         },
       });
 
@@ -153,9 +156,15 @@ const ChatContainer: FC = () => {
 
   // 首先一个输入框，输入昵称，当昵称输入完成进入房间
   return (
-    <div>
+    <Box
+      display="flex"
+      flexDirection="column"
+      width="100vw"
+      height="100vh"
+      overflow="hidden"
+    >
       <Header></Header>
-      {/* <MessageList messages={state.messages}></MessageList> */}
+      <MessageList messages={state.messages}></MessageList>
       {/* <div>
         {state.messages.map((message: ClientMessage) => {
           if (message.type === MESSAGE_TYPE.TEXT) {
@@ -174,7 +183,7 @@ const ChatContainer: FC = () => {
         })}
       </div> */}
       <Operation></Operation>
-    </div>
+    </Box>
   );
 };
 
