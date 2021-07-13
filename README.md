@@ -2,6 +2,13 @@
 
 一个聊天室项目
 
+```sh
+yarn run app
+yarn run server
+
+// 浏览器访问打开前端项目 http://localhost:3000/
+```
+
 ## 项目命题
 
 - React + ReactHooks + TS
