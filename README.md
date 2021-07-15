@@ -3,6 +3,10 @@
 一个聊天室项目
 
 ```sh
+yarn 安装依赖
+```
+
+```sh
 yarn run app
 yarn run server
 
