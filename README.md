@@ -7,9 +7,7 @@ yarn 安装依赖
 ```
 
 ```sh
-yarn run app
-yarn run server
-
+yarn start
 // 浏览器访问打开前端项目 http://localhost:3000/
 ```
 
